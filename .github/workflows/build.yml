@@ -18,14 +18,14 @@ jobs:
           script: |
             const releases = await github.rest.repos.listReleases({owner: context.repo.owner, repo: context.repo.repo});
             const draft = releases.data.find(r => r.draft);
-            if (!draft) throw new Error("No draft release found!");
+            if (!draft) throw new Error("NODRAFT");
             core.setOutput('tag_name', draft.tag_name);
 
   build:
     needs: find-draft
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: false 
       matrix:
         include:
           - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, bin: qack, name: qack-linux-amd64 }
@@ -45,6 +45,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -55,18 +56,24 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Build
+        shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
             cross build --release --target ${{ matrix.target }}
           else
             cargo build --release --target ${{ matrix.target }}
           fi
-        shell: bash
 
-      - name: Upload
+      - name: Rename and Move
+        shell: bash
+        run: |
+          cp target/${{ matrix.target }}/release/${{ matrix.bin }} ./${{ matrix.name }}
+
+      - name: Upload to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: target/${{ matrix.target }}/release/${{ matrix.bin }}
+          files: ./${{ matrix.name }}
           tag_name: ${{ needs.find-draft.outputs.tag_name }}
+          draft: true 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
