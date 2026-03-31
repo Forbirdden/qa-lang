@@ -1,0 +1,26 @@
+[target.arm-linux-androideabi]
+image = "ghcr.io/cross-rs/arm-linux-androideabi:edge"
+
+[target.mips64-unknown-linux-musl]
+image = "ghcr.io/cross-rs/mips64-unknown-linux-muslabi64:edge"
+
+[target.mipsel-unknown-linux-musl]
+image = "ghcr.io/cross-rs/mipsel-unknown-linux-musl:edge"
+
+[target.mips64el-unknown-linux-gnu]
+image = "ghcr.io/cross-rs/mips64el-unknown-linux-gnuabi64:edge"
+
+[target.mips64-unknown-linux-gnu]
+image = "ghcr.io/cross-rs/mips64-unknown-linux-gnuabi64:edge"
+
+[target.mips64el-unknown-linux-musl]
+image = "ghcr.io/cross-rs/mips64el-unknown-linux-muslabi64:edge"
+
+[target.mips-unknown-linux-musl]
+image = "ghcr.io/cross-rs/mips-unknown-linux-musl:edge"
+
+[target.mips-unknown-linux-gnu]
+image = "ghcr.io/cross-rs/mips-unknown-linux-gnu:edge"
+
+[target.mipsel-unknown-linux-gnu]
+image = "ghcr.io/cross-rs/mipsel-unknown-linux-gnu:edge"
