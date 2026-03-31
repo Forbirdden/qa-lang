@@ -105,10 +105,10 @@ jobs:
             elif [[ "${{ matrix.target }}" =~ (riscv32gc-unknown-linux-musl) ]]; then
               export ZIG_TARGET="riscv32-linux-musl"
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
-            elif [[ "${{ matrix.target }}" =~ (loongarch-unknown-linux-gnu) ]]; then
+            elif [[ "${{ matrix.target }}" =~ (loongarch32-unknown-linux-gnu) ]]; then
               export ZIG_TARGET="loongarch32-linux-gnu"
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
-            elif [[ "${{ matrix.target }}" =~ (loongarch-unknown-linux-musl) ]]; then
+            elif [[ "${{ matrix.target }}" =~ (loongarch32-unknown-linux-musl) ]]; then
               export ZIG_TARGET="loongarch32-linux-musl"
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
             else
