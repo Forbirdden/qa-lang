@@ -100,13 +100,13 @@ jobs:
             if [[ "${{ matrix.target }}" =~ (mips|powerpc|s390x-unknown-linux-musl) ]]; then
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
             elif [[ "${{ matrix.target }}" =~ (riscv32gc-unknown-linux-gnu) ]]; then
-              cargo zigbuild --release --target ${{ matrix.target }} --zig-target riscv32-linux-gnu -Z build-std=std,core,alloc,panic_abort
+              cargo zigbuild --release --target riscv32-linux-gnu -Z build-std=std,core,alloc,panic_abort
             elif [[ "${{ matrix.target }}" =~ (riscv32gc-unknown-linux-musl) ]]; then
-              cargo zigbuild --release --target ${{ matrix.target }} --zig-target riscv32-linux-musl -Z build-std=std,core,alloc,panic_abort
+              cargo zigbuild --release --target riscv32-linux-musl -Z build-std=std,core,alloc,panic_abort
             elif [[ "${{ matrix.target }}" =~ (loongarch-unknown-linux-gnu) ]]; then
-              cargo zigbuild --release --target ${{ matrix.target }} --zig-target loongarch32-linux-gnu -Z build-std=std,core,alloc,panic_abort
+              cargo zigbuild --release --target loongarch32-linux-gnu -Z build-std=std,core,alloc,panic_abort
             elif [[ "${{ matrix.target }}" =~ (loongarch-unknown-linux-musl) ]]; then
-              cargo zigbuild --release --target ${{ matrix.target }} --zig-target loongarch32-linux-musl -Z build-std=std,core,alloc,panic_abort
+              cargo zigbuild --release --target loongarch32-linux-musl -Z build-std=std,core,alloc,panic_abort
             else
               cross build --release --target ${{ matrix.target }}
             fi
