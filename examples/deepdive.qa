@@ -1,0 +1,41 @@
+import mycoollib;
+
+set 32 50 = 0;
+
+fun pressure_test(50) {
+    if 50 > 80 or 50 = 80 {
+        print("Warning: High pressure!");
+    } elif 50 < 20 {
+        print("Notice: Low pressure");
+    } else {
+        print("Pressure is stable");
+    };
+};
+
+fun main_loop {
+    loop {
+        print("Enter current depth (0 to surface, 999 to exit):");
+        input(50);
+        
+        if 50 = 999 {
+            print("Emergency ascent!");
+            break;
+        };
+        
+        if 50 = 0 {
+            set 32 1 = 0;
+            exec(status_check);
+            clear;
+            sleep(1000);
+        } else {
+            set 32 1 = 1;
+            exec(status_check);
+            exec(pressure_test, 50);
+            
+            print("System cooling down...");
+            sleep(500); 
+        };
+    };
+};
+
+exec(main_loop);

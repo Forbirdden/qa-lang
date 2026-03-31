@@ -1,0 +1,17 @@
+[package]
+name = "qack"
+version = "0.0.1"
+edition = "2021"
+authors = ["Forbirdden"]
+description = "This is a Qa lang compiler"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
+colored = "3.1.1"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
