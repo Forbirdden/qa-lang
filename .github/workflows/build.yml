@@ -44,7 +44,7 @@ jobs:
           - { os: ubuntu-latest, target: powerpc64-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc64-gnu } 
           - { os: ubuntu-latest, target: powerpc64le-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc64le-gnu } 
           - { os: ubuntu-latest, target: loongarch64-unknown-linux-gnu, bin: qack, name: qack-linux-loongarch64-gnu } 
-          - { os: ubuntu-latest, target: loongarch32-unknown-linux-gnu, bin: qack, name: qack-linux-loongarch32-gnu } 
+          - { os: ubuntu-latest, target: loongarch-unknown-linux-gnu, bin: qack, name: qack-linux-loongarch32-gnu } 
           # MUSL LINUX
           - { os: ubuntu-latest, target: x86_64-unknown-linux-musl, bin: qack, name: qack-linux-amd64-musl }
           - { os: ubuntu-latest, target: i686-unknown-linux-musl, bin: qack, name: qack-linux-i686-musl }
@@ -61,7 +61,7 @@ jobs:
           - { os: ubuntu-latest, target: powerpc64-unknown-linux-musl, bin: qack, name: qack-linux-powerpc64-musl } 
           - { os: ubuntu-latest, target: powerpc64le-unknown-linux-musl, bin: qack, name: qack-linux-powerpc64le-musl } 
           - { os: ubuntu-latest, target: loongarch64-unknown-linux-musl, bin: qack, name: qack-linux-loongarch64-musl } 
-          - { os: ubuntu-latest, target: loongarch32-unknown-linux-musl, bin: qack, name: qack-linux-loongarch32-musl } 
+          - { os: ubuntu-latest, target: loongarch-unknown-linux-musl, bin: qack, name: qack-linux-loongarch32-musl } 
           # ANDROID
           - { os: ubuntu-latest, target: aarch64-linux-android, bin: qack, name: qack-android-arm64 }
           - { os: ubuntu-latest, target: arm-linux-androideabi, bin: qack, name: qack-android-arm32 }
@@ -97,14 +97,23 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
-            if [[ "${{ matrix.target }}" =~ (mips|powerpc|s390x-unknown-linux-musl|loongarch32|riscv32) ]]; then
-              cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort  
+            if [[ "${{ matrix.target }}" =~ (mips|powerpc|s390x-unknown-linux-musl) ]]; then
+              cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
+            elif [[ "${{ matrix.target }}" =~ (riscv32gc-unknown-linux-gnu) ]]; then
+              cargo zigbuild --release --target ${{ matrix.target }} --zig-target riscv32-linux-gnu -Z build-std=std,core,alloc,panic_abort
+            elif [[ "${{ matrix.target }}" =~ (riscv32gc-unknown-linux-musl) ]]; then
+              cargo zigbuild --release --target ${{ matrix.target }} --zig-target riscv32-linux-musl -Z build-std=std,core,alloc,panic_abort
+            elif [[ "${{ matrix.target }}" =~ (loongarch-unknown-linux-gnu) ]]; then
+              cargo zigbuild --release --target ${{ matrix.target }} --zig-target loongarch32-linux-gnu -Z build-std=std,core,alloc,panic_abort
+            elif [[ "${{ matrix.target }}" =~ (loongarch-unknown-linux-musl) ]]; then
+              cargo zigbuild --release --target ${{ matrix.target }} --zig-target loongarch32-linux-musl -Z build-std=std,core,alloc,panic_abort
             else
               cross build --release --target ${{ matrix.target }}
             fi
           else
             cargo build --release --target ${{ matrix.target }}
           fi
+
 
       - name: Rename and Move
         shell: bash
