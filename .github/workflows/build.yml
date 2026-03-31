@@ -81,9 +81,9 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: ${{ (contains(matrix.target, 'powerpc-unknown-linux-musl') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch32') || contains(matrix.target, 'riscv32')) && 'nightly' || 'stable' }}
-          targets: ${{ !((contains(matrix.target, 'powerpc-unknown-linux-musl') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch32') || contains(matrix.target, 'riscv32'))) && matrix.target || '' }}
-          components: ${{ (contains(matrix.target, 'powerpc-unknown-linux-musl') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch32') || contains(matrix.target, 'riscv32')) && 'rust-src' || '' }}
+          toolchain: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch32') || contains(matrix.target, 'riscv32')) && 'nightly' || 'stable' }}
+          targets: ${{ !((contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch32') || contains(matrix.target, 'riscv32'))) && matrix.target || '' }}
+          components: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch32') || contains(matrix.target, 'riscv32')) && 'rust-src' || '' }}
 
       - name: Install CrossRS
         if: runner.os == 'Linux'
@@ -97,7 +97,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
-            if [[ "${{ matrix.target }}" =~ (mips|powerpc-unknown-linux-musl|s390x-unknown-linux-musl|loongarch32|riscv32) ]]; then
+            if [[ "${{ matrix.target }}" =~ (mips|powerpc|s390x-unknown-linux-musl|loongarch32|riscv32) ]]; then
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std -Z unstable-options -C panic=immediate-abort
             else
               cross build --release --target ${{ matrix.target }}
