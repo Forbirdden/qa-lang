@@ -99,18 +99,18 @@ jobs:
           if [ "${{ runner.os }}" = "Linux" ]; then
             if [[ "${{ matrix.target }}" =~ (mips|powerpc|s390x-unknown-linux-musl) ]]; then
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
-            elif [[ "${{ matrix.target }}" =~ (riscv32gc-unknown-linux-gnu) ]]; then
-              export ZIG_TARGET="riscv32-linux-gnu"
-              cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
-            elif [[ "${{ matrix.target }}" =~ (riscv32gc-unknown-linux-musl) ]]; then
-              export ZIG_TARGET="riscv32-linux-musl"
-              cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
-            elif [[ "${{ matrix.target }}" =~ (loongarch32-unknown-linux-gnu) ]]; then
-              export ZIG_TARGET="loongarch32-linux-gnu"
-              cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
-            elif [[ "${{ matrix.target }}" =~ (loongarch32-unknown-linux-musl) ]]; then
-              export ZIG_TARGET="loongarch32-linux-musl"
-              cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
+            elif [[ "${{ matrix.target }}" =~ (riscv32gc|loongarch32) ]]; then
+              
+              ZIG_ARCH="riscv32"
+              [[ "${{ matrix.target }}" =~ "loongarch32" ]] && ZIG_ARCH="loongarch32"
+              
+              ZIG_OS="linux-gnu"
+              [[ "${{ matrix.target }}" =~ "musl" ]] && ZIG_OS="linux-musl"
+
+              cargo build --release --target ${{ matrix.target }} \
+                -Z build-std=std,core,alloc,panic_abort \
+                --config "target.${{ matrix.target }}.linker=\"zigcc\"" \
+                --env "ZIG_CC_TARGET=$ZIG_ARCH-$ZIG_OS"
             else
               cross build --release --target ${{ matrix.target }}
             fi
