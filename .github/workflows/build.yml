@@ -54,7 +54,6 @@ jobs:
           - { os: ubuntu-latest, target: riscv64gc-unknown-linux-musl, bin: qack, name: qack-linux-riscv64-musl }
           - { os: ubuntu-latest, target: s390x-unknown-linux-musl, bin: qack, name: qack-linux-s390x-musl }
           - { os: ubuntu-latest, target: powerpc64-unknown-linux-musl, bin: qack, name: qack-linux-powerpc64-musl } 
-          - { os: ubuntu-latest, target: powerpc64le-unknown-linux-musl, bin: qack, name: qack-linux-powerpc64le-musl } 
           - { os: ubuntu-latest, target: loongarch64-unknown-linux-musl, bin: qack, name: qack-linux-loongarch64-musl }  
           # ANDROID
           - { os: ubuntu-latest, target: aarch64-linux-android, bin: qack, name: qack-android-arm64 }
@@ -84,7 +83,7 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Install zigbuild
-        if: runner.os == 'Linux'
+        if: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl')) && 'rust-src' || '' }}
         run: pip install cargo-zigbuild
 
       - name: Build
