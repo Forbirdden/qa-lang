@@ -1,3 +1,2 @@
 *.qa linguist-detectable=true
 *.qa linguist-generated=false
-*.qa linguist-language=Qa
