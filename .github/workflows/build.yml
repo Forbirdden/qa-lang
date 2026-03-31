@@ -1,0 +1,72 @@
+name: Build & Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  find-draft:
+    runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.get-draft.outputs.tag_name }}
+    steps:
+      - id: get-draft
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const releases = await github.rest.repos.listReleases({owner: context.repo.owner, repo: context.repo.repo});
+            const draft = releases.data.find(r => r.draft);
+            if (!draft) throw new Error("No draft release found!");
+            core.setOutput('tag_name', draft.tag_name);
+
+  build:
+    needs: find-draft
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, bin: qack, name: qack-linux-amd64 }
+          - { os: ubuntu-latest, target: i686-unknown-linux-gnu, bin: qack, name: qack-linux-i386 }
+          - { os: ubuntu-latest, target: aarch64-unknown-linux-gnu, bin: qack, name: qack-linux-arm64 }
+          - { os: ubuntu-latest, target: arm-unknown-linux-gnueabi, bin: qack, name: qack-linux-arm }
+          - { os: ubuntu-latest, target: mips-unknown-linux-gnu, bin: qack, name: qack-linux-mips }
+          - { os: ubuntu-latest, target: mipsel-unknown-linux-gnu, bin: qack, name: qack-linux-mipsle }
+          - { os: ubuntu-latest, target: riscv64gc-unknown-linux-gnu, bin: qack, name: qack-linux-riscv64 }
+          - { os: ubuntu-latest, target: s390x-unknown-linux-gnu, bin: qack, name: qack-linux-s390x }
+          - { os: ubuntu-latest, target: powerpc-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc }      
+          - { os: windows-latest, target: x86_64-pc-windows-msvc, bin: qack.exe, name: qack-windows-amd64.exe }
+          - { os: windows-latest, target: i686-pc-windows-msvc, bin: qack.exe, name: qack-windows-i386.exe }
+          - { os: windows-latest, target: aarch64-pc-windows-msvc, bin: qack.exe, name: qack-windows-arm64.exe }
+          - { os: macos-latest, target: x86_64-apple-darwin, bin: qack, name: qack-macos-amd64 }
+          - { os: macos-latest, target: aarch64-apple-darwin, bin: qack, name: qack-macos-arm64 }
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install Cross
+        if: runner.os == 'Linux'
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      - name: Build
+        run: |
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            cross build --release --target ${{ matrix.target }}
+          else
+            cargo build --release --target ${{ matrix.target }}
+          fi
+        shell: bash
+
+      - name: Upload
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/${{ matrix.target }}/release/${{ matrix.bin }}
+          tag_name: ${{ needs.find-draft.outputs.tag_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
