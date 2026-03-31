@@ -38,13 +38,10 @@ jobs:
           - { os: ubuntu-latest, target: mips64-unknown-linux-gnuabi64, bin: qack, name: qack-linux-mips64-gnu }
           - { os: ubuntu-latest, target: mips64el-unknown-linux-gnuabi64, bin: qack, name: qack-linux-mips64el-gnu }
           - { os: ubuntu-latest, target: riscv64gc-unknown-linux-gnu, bin: qack, name: qack-linux-riscv64-gnu }
-          - { os: ubuntu-latest, target: riscv32gc-unknown-linux-gnu, bin: qack, name: qack-linux-riscv32-gnu }
           - { os: ubuntu-latest, target: s390x-unknown-linux-gnu, bin: qack, name: qack-linux-s390x-gnu }
-          - { os: ubuntu-latest, target: powerpc-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc32-gnu } 
           - { os: ubuntu-latest, target: powerpc64-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc64-gnu } 
           - { os: ubuntu-latest, target: powerpc64le-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc64le-gnu } 
           - { os: ubuntu-latest, target: loongarch64-unknown-linux-gnu, bin: qack, name: qack-linux-loongarch64-gnu } 
-          - { os: ubuntu-latest, target: loongarch32-unknown-linux-gnu, bin: qack, name: qack-linux-loongarch32-gnu } 
           # MUSL LINUX
           - { os: ubuntu-latest, target: x86_64-unknown-linux-musl, bin: qack, name: qack-linux-amd64-musl }
           - { os: ubuntu-latest, target: i686-unknown-linux-musl, bin: qack, name: qack-linux-i686-musl }
@@ -55,13 +52,10 @@ jobs:
           - { os: ubuntu-latest, target: mips64-unknown-linux-muslabi64, bin: qack, name: qack-linux-mips64-musl }
           - { os: ubuntu-latest, target: mips64el-unknown-linux-muslabi64, bin: qack, name: qack-linux-mips64el-musl }
           - { os: ubuntu-latest, target: riscv64gc-unknown-linux-musl, bin: qack, name: qack-linux-riscv64-musl }
-          - { os: ubuntu-latest, target: riscv32gc-unknown-linux-musl, bin: qack, name: qack-linux-riscv32-musl }
           - { os: ubuntu-latest, target: s390x-unknown-linux-musl, bin: qack, name: qack-linux-s390x-musl }
-          - { os: ubuntu-latest, target: powerpc-unknown-linux-musl, bin: qack, name: qack-linux-powerpc32-musl } 
           - { os: ubuntu-latest, target: powerpc64-unknown-linux-musl, bin: qack, name: qack-linux-powerpc64-musl } 
           - { os: ubuntu-latest, target: powerpc64le-unknown-linux-musl, bin: qack, name: qack-linux-powerpc64le-musl } 
-          - { os: ubuntu-latest, target: loongarch64-unknown-linux-musl, bin: qack, name: qack-linux-loongarch64-musl } 
-          - { os: ubuntu-latest, target: loongarch32-unknown-linux-musl, bin: qack, name: qack-linux-loongarch32-musl } 
+          - { os: ubuntu-latest, target: loongarch64-unknown-linux-musl, bin: qack, name: qack-linux-loongarch64-musl }  
           # ANDROID
           - { os: ubuntu-latest, target: aarch64-linux-android, bin: qack, name: qack-android-arm64 }
           - { os: ubuntu-latest, target: arm-linux-androideabi, bin: qack, name: qack-android-arm32 }
