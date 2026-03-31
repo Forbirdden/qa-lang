@@ -35,8 +35,8 @@ jobs:
           - { os: ubuntu-latest, target: arm-unknown-linux-gnueabi, bin: qack, name: qack-linux-arm32-gnu }
           - { os: ubuntu-latest, target: mips-unknown-linux-gnu, bin: qack, name: qack-linux-mips32-gnu }
           - { os: ubuntu-latest, target: mipsel-unknown-linux-gnu, bin: qack, name: qack-linux-mips32el-gnu }
-          - { os: ubuntu-latest, target: mips64-unknown-linux-gnu, bin: qack, name: qack-linux-mips64-gnu }
-          - { os: ubuntu-latest, target: mips64el-unknown-linux-gnu, bin: qack, name: qack-linux-mips64el-gnu }
+          - { os: ubuntu-latest, target: mips64-unknown-linux-gnuabi64, bin: qack, name: qack-linux-mips64-gnu }
+          - { os: ubuntu-latest, target: mips64el-unknown-linux-gnuabi64, bin: qack, name: qack-linux-mips64el-gnu }
           - { os: ubuntu-latest, target: riscv64gc-unknown-linux-gnu, bin: qack, name: qack-linux-riscv64-gnu }
           - { os: ubuntu-latest, target: riscv32gc-unknown-linux-gnu, bin: qack, name: qack-linux-riscv32-gnu }
           - { os: ubuntu-latest, target: s390x-unknown-linux-gnu, bin: qack, name: qack-linux-s390x-gnu }
@@ -52,8 +52,8 @@ jobs:
           - { os: ubuntu-latest, target: arm-unknown-linux-musleabi, bin: qack, name: qack-linux-arm32-musl }
           - { os: ubuntu-latest, target: mips-unknown-linux-musl, bin: qack, name: qack-linux-mips32-musl }
           - { os: ubuntu-latest, target: mipsel-unknown-linux-musl, bin: qack, name: qack-linux-mips32el-musl }
-          - { os: ubuntu-latest, target: mips64-unknown-linux-musl, bin: qack, name: qack-linux-mips64-musl }
-          - { os: ubuntu-latest, target: mips64el-unknown-linux-musl, bin: qack, name: qack-linux-mips64el-musl }
+          - { os: ubuntu-latest, target: mips64-unknown-linux-muslabi64, bin: qack, name: qack-linux-mips64-musl }
+          - { os: ubuntu-latest, target: mips64el-unknown-linux-muslabi64, bin: qack, name: qack-linux-mips64el-musl }
           - { os: ubuntu-latest, target: riscv64gc-unknown-linux-musl, bin: qack, name: qack-linux-riscv64-musl }
           - { os: ubuntu-latest, target: riscv32gc-unknown-linux-musl, bin: qack, name: qack-linux-riscv32-musl }
           - { os: ubuntu-latest, target: s390x-unknown-linux-musl, bin: qack, name: qack-linux-s390x-musl }
@@ -98,7 +98,7 @@ jobs:
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
             if [[ "${{ matrix.target }}" =~ (mips|powerpc-unknown-linux-musl|s390x-unknown-linux-musl|loongarch32|riscv32) ]]; then
-              cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort -Z build-std-features=panic_immediate_abort
+              cargo zigbuild --release --target ${{ matrix.target }} -Z build-std -Z unstable-options -C panic=immediate-abort
             else
               cross build --release --target ${{ matrix.target }}
             fi
