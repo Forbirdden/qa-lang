@@ -99,8 +99,10 @@ jobs:
           if [ "${{ runner.os }}" = "Linux" ]; then
             if [[ "${{ matrix.target }}" =~ (powerpc|s390x-unknown-linux-musl) ]]; then
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
-            else
+            elif [[ "${{ matrix.target }}" =~ (mips) ]]
               cross build --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
+            else
+              cross build --release --target ${{ matrix.target }}
             fi
           else
             cargo build --release --target ${{ matrix.target }}
