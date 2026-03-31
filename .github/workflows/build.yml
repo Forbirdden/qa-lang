@@ -97,7 +97,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
-            if [[ "${{ matrix.target }}" =~ (mips|powerpc|s390x-unknown-linux-musl) ]]; then
+            if [[ "${{ matrix.target }}" =~ (powerpc|s390x-unknown-linux-musl) ]]; then
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
             elif [[ "${{ matrix.target }}" =~ (riscv32gc|loongarch32) ]]; then
               
