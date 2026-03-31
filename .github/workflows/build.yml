@@ -100,7 +100,8 @@ jobs:
             if [[ "${{ matrix.target }}" =~ (mips|powerpc|s390x-unknown-linux-musl|loongarch32|riscv32) ]]; then
               cargo zigbuild --release --target ${{ matrix.target }} \
                 -Z build-std=std,core,alloc,panic_abort \
-                -Z build-std-features=panic_immediate_abort
+                -- -Z unstable-options -C panic=immediate-abort
+                
             else
               cross build --release --target ${{ matrix.target }}
             fi
