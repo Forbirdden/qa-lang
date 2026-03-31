@@ -28,18 +28,44 @@ jobs:
       fail-fast: false 
       matrix:
         include:
-          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, bin: qack, name: qack-linux-amd64 }
-          - { os: ubuntu-latest, target: i686-unknown-linux-gnu, bin: qack, name: qack-linux-i686 }
-          - { os: ubuntu-latest, target: aarch64-unknown-linux-gnu, bin: qack, name: qack-linux-arm64 }
-          - { os: ubuntu-latest, target: arm-unknown-linux-gnueabi, bin: qack, name: qack-linux-arm }
-          - { os: ubuntu-latest, target: mips-unknown-linux-gnu, bin: qack, name: qack-linux-mips }
-          - { os: ubuntu-latest, target: mipsel-unknown-linux-gnu, bin: qack, name: qack-linux-mipsle }
-          - { os: ubuntu-latest, target: riscv64gc-unknown-linux-gnu, bin: qack, name: qack-linux-riscv64 }
-          - { os: ubuntu-latest, target: s390x-unknown-linux-gnu, bin: qack, name: qack-linux-s390x }
-          - { os: ubuntu-latest, target: powerpc-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc }      
+          # GNU LINUX
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, bin: qack, name: qack-linux-amd64-gnu }
+          - { os: ubuntu-latest, target: i686-unknown-linux-gnu, bin: qack, name: qack-linux-i686-gnu }
+          - { os: ubuntu-latest, target: aarch64-unknown-linux-gnu, bin: qack, name: qack-linux-arm64-gnu }
+          - { os: ubuntu-latest, target: arm-unknown-linux-gnueabi, bin: qack, name: qack-linux-arm-gnu }
+          - { os: ubuntu-latest, target: mips-unknown-linux-gnu, bin: qack, name: qack-linux-mips-gnu }
+          - { os: ubuntu-latest, target: mipsel-unknown-linux-gnu, bin: qack, name: qack-linux-mipsel-gnu }
+          - { os: ubuntu-latest, target: mips64-unknown-linux-gnu, bin: qack, name: qack-linux-mips64-gnu }
+          - { os: ubuntu-latest, target: mips64el-unknown-linux-gnu, bin: qack, name: qack-linux-mips64el-gnu }
+          - { os: ubuntu-latest, target: riscv64gc-unknown-linux-gnu, bin: qack, name: qack-linux-riscv64-gnu }
+          - { os: ubuntu-latest, target: s390x-unknown-linux-gnu, bin: qack, name: qack-linux-s390x-gnu }
+          - { os: ubuntu-latest, target: powerpc-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc-gnu } 
+          - { os: ubuntu-latest, target: loongarch64-unknown-linux-gnu, bin: qack, name: qack-linux-loongarch64-gnu } 
+          - { os: ubuntu-latest, target: loongarch32-unknown-linux-gnu, bin: qack, name: qack-linux-loongarch-gnu } 
+          # MUSL LINUX
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-musl, bin: qack, name: qack-linux-amd64-musl }
+          - { os: ubuntu-latest, target: i686-unknown-linux-musl, bin: qack, name: qack-linux-i686-musl }
+          - { os: ubuntu-latest, target: aarch64-unknown-linux-musl, bin: qack, name: qack-linux-arm64-musl }
+          - { os: ubuntu-latest, target: arm-unknown-linux-musleabi, bin: qack, name: qack-linux-arm-musl }
+          - { os: ubuntu-latest, target: mips-unknown-linux-musl, bin: qack, name: qack-linux-mips-musl }
+          - { os: ubuntu-latest, target: mipsel-unknown-linux-musl, bin: qack, name: qack-linux-mipsel-musl }
+          - { os: ubuntu-latest, target: mips64-unknown-linux-musl, bin: qack, name: qack-linux-mips64-musl }
+          - { os: ubuntu-latest, target: mips64el-unknown-linux-musl, bin: qack, name: qack-linux-mips64el-musl }
+          - { os: ubuntu-latest, target: riscv64gc-unknown-linux-musl, bin: qack, name: qack-linux-riscv64-musl }
+          - { os: ubuntu-latest, target: s390x-unknown-linux-musl, bin: qack, name: qack-linux-s390x-musl }
+          - { os: ubuntu-latest, target: powerpc-unknown-linux-musl, bin: qack, name: qack-linux-powerpc-musl } 
+          - { os: ubuntu-latest, target: loongarch64-unknown-linux-musl, bin: qack, name: qack-linux-loongarch64-musl } 
+          - { os: ubuntu-latest, target: loongarch32-unknown-linux-musl, bin: qack, name: qack-linux-loongarch-musl } 
+          # ANDROID
+          - { os: ubuntu-latest, target: aarch64-linux-android, bin: qack, name: qack-android-arm64 }
+          - { os: ubuntu-latest, target: arm-linux-androideabi, bin: qack, name: qack-android-arm }
+          - { os: ubuntu-latest, target: x86_64-linux-android, bin: qack, name: qack-android-amd64 }
+          - { os: ubuntu-latest, target: i686-linux-android, bin: qack, name: qack-android-amd64 }
+          # WINDOWS
           - { os: windows-latest, target: x86_64-pc-windows-msvc, bin: qack.exe, name: qack-windows-amd64.exe }
           - { os: windows-latest, target: i686-pc-windows-msvc, bin: qack.exe, name: qack-windows-i686.exe }
           - { os: windows-latest, target: aarch64-pc-windows-msvc, bin: qack.exe, name: qack-windows-arm64.exe }
+          # MAC OS
           - { os: macos-latest, target: x86_64-apple-darwin, bin: qack, name: qack-macos-amd64 }
           - { os: macos-latest, target: aarch64-apple-darwin, bin: qack, name: qack-macos-arm64 }
 
@@ -51,7 +77,7 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Install Cross
+      - name: Install CrossRS
         if: runner.os == 'Linux'
         run: cargo install cross --git https://github.com/cross-rs/cross
 
@@ -67,7 +93,11 @@ jobs:
       - name: Rename and Move
         shell: bash
         run: |
-          cp target/${{ matrix.target }}/release/${{ matrix.bin }} ./${{ matrix.name }}
+          if [ -f "target/${{ matrix.target }}/release/${{ matrix.bin }}" ]; then
+            cp "target/${{ matrix.target }}/release/${{ matrix.bin }}" "./${{ matrix.name }}"
+          else
+            cp "target/release/${{ matrix.bin }}" "./${{ matrix.name }}"
+          fi
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
