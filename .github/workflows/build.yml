@@ -69,7 +69,7 @@ jobs:
           - { os: macos-latest, target: aarch64-apple-darwin, bin: qack, name: qack-macos-arm64 }
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@master
@@ -115,7 +115,7 @@ jobs:
           fi
 
       - name: Upload to Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.6.1
         with:
           files: ./${{ matrix.name }}
           tag_name: ${{ needs.find-draft.outputs.tag_name }}
