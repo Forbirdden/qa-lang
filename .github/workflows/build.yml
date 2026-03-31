@@ -89,13 +89,16 @@ jobs:
         if: runner.os == 'Linux'
         run: cargo install cross --git https://github.com/cross-rs/cross
 
+      - name: Install zigbuild
+        if: runner.os == 'Linux'
+        run: pip install cargo-zigbuild
+
       - name: Build
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
-            if [[ "${{ matrix.target }}" =~ (powerpc-unknown-linux-musl|s390x-unknown-linux-musl|loongarch32|riscv32) ]]; then
-              echo "Building exotic Tier 3 target..."
-              cross build --release --target ${{ matrix.target }} -Z build-std
+            if [[ "${{ matrix.target }}" =~ (mips|powerpc-unknown-linux-musl|s390x-unknown-linux-musl|loongarch32|riscv32) ]]; then
+              cargo zigbuild --release --target ${{ matrix.target }} -Z build-std
             else
               cross build --release --target ${{ matrix.target }}
             fi
