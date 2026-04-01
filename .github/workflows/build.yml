@@ -1,0 +1,124 @@
+name: Build & Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  find-draft:
+    runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.get-draft.outputs.tag_name }}
+    steps:
+      - id: get-draft
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const releases = await github.rest.repos.listReleases({owner: context.repo.owner, repo: context.repo.repo});
+            const draft = releases.data.find(r => r.draft);
+            if (!draft) throw new Error("NODRAFT");
+            core.setOutput('tag_name', draft.tag_name);
+
+  build:
+    needs: find-draft
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false 
+      matrix:
+        include:
+          # GNU LINUX
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, bin: qack, name: qack-linux-amd64-gnu }
+          - { os: ubuntu-latest, target: i686-unknown-linux-gnu, bin: qack, name: qack-linux-i686-gnu }
+          - { os: ubuntu-latest, target: aarch64-unknown-linux-gnu, bin: qack, name: qack-linux-arm64-gnu }
+          - { os: ubuntu-latest, target: arm-unknown-linux-gnueabi, bin: qack, name: qack-linux-arm32-gnu }
+          - { os: ubuntu-latest, target: mips-unknown-linux-gnu, bin: qack, name: qack-linux-mips32-gnu }
+          - { os: ubuntu-latest, target: mipsel-unknown-linux-gnu, bin: qack, name: qack-linux-mips32el-gnu }
+          - { os: ubuntu-latest, target: mips64-unknown-linux-gnuabi64, bin: qack, name: qack-linux-mips64-gnu }
+          - { os: ubuntu-latest, target: mips64el-unknown-linux-gnuabi64, bin: qack, name: qack-linux-mips64el-gnu }
+          - { os: ubuntu-latest, target: riscv64gc-unknown-linux-gnu, bin: qack, name: qack-linux-riscv64-gnu }
+          - { os: ubuntu-latest, target: s390x-unknown-linux-gnu, bin: qack, name: qack-linux-s390x-gnu }
+          - { os: ubuntu-latest, target: powerpc64-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc64-gnu } 
+          - { os: ubuntu-latest, target: powerpc64le-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc64le-gnu } 
+          - { os: ubuntu-latest, target: loongarch64-unknown-linux-gnu, bin: qack, name: qack-linux-loongarch64-gnu } 
+          # MUSL LINUX
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-musl, bin: qack, name: qack-linux-amd64-musl }
+          - { os: ubuntu-latest, target: i686-unknown-linux-musl, bin: qack, name: qack-linux-i686-musl }
+          - { os: ubuntu-latest, target: aarch64-unknown-linux-musl, bin: qack, name: qack-linux-arm64-musl }
+          - { os: ubuntu-latest, target: arm-unknown-linux-musleabi, bin: qack, name: qack-linux-arm32-musl }
+          - { os: ubuntu-latest, target: mips-unknown-linux-musl, bin: qack, name: qack-linux-mips32-musl }
+          - { os: ubuntu-latest, target: mipsel-unknown-linux-musl, bin: qack, name: qack-linux-mips32el-musl }
+          - { os: ubuntu-latest, target: mips64-unknown-linux-muslabi64, bin: qack, name: qack-linux-mips64-musl }
+          - { os: ubuntu-latest, target: mips64el-unknown-linux-muslabi64, bin: qack, name: qack-linux-mips64el-musl }
+          - { os: ubuntu-latest, target: riscv64gc-unknown-linux-musl, bin: qack, name: qack-linux-riscv64-musl }
+          - { os: ubuntu-latest, target: s390x-unknown-linux-musl, bin: qack, name: qack-linux-s390x-musl }
+          - { os: ubuntu-latest, target: powerpc64-unknown-linux-musl, bin: qack, name: qack-linux-powerpc64-musl } 
+          - { os: ubuntu-latest, target: loongarch64-unknown-linux-musl, bin: qack, name: qack-linux-loongarch64-musl }  
+          # ANDROID
+          - { os: ubuntu-latest, target: aarch64-linux-android, bin: qack, name: qack-android-arm64 }
+          - { os: ubuntu-latest, target: arm-linux-androideabi, bin: qack, name: qack-android-arm32 }
+          - { os: ubuntu-latest, target: x86_64-linux-android, bin: qack, name: qack-android-amd64 }
+          - { os: ubuntu-latest, target: i686-linux-android, bin: qack, name: qack-android-i686 }
+          # WINDOWS
+          - { os: windows-latest, target: x86_64-pc-windows-msvc, bin: qack.exe, name: qack-windows-amd64.exe }
+          - { os: windows-latest, target: i686-pc-windows-msvc, bin: qack.exe, name: qack-windows-i686.exe }
+          - { os: windows-latest, target: aarch64-pc-windows-msvc, bin: qack.exe, name: qack-windows-arm64.exe }
+          # MAC OS
+          - { os: macos-latest, target: x86_64-apple-darwin, bin: qack, name: qack-macos-amd64 }
+          - { os: macos-latest, target: aarch64-apple-darwin, bin: qack, name: qack-macos-arm64 }
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc')) && 'nightly' || 'stable' }}
+          targets: ${{ !((contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc'))) && matrix.target || '' }}
+          components: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc')) && 'rust-src' || '' }}
+
+      - name: Install CrossRS
+        if: runner.os == 'Linux'
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      - name: Install zigbuild
+        if: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl')) && 'rust-src' || '' }}
+        run: pip install cargo-zigbuild
+
+      - name: Build
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            if [[ "${{ matrix.target }}" =~ (powerpc|s390x-unknown-linux-musl) ]]; then
+              cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
+            elif [[ "${{ matrix.target }}" =~ (mips) ]]; then
+              cross build --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
+            else
+              cross build --release --target ${{ matrix.target }}
+            fi
+          else
+            cargo build --release --target ${{ matrix.target }}
+          fi
+
+
+      - name: Rename and Move
+        shell: bash
+        run: |
+          if [ -f "target/${{ matrix.target }}/release/${{ matrix.bin }}" ]; then
+            cp "target/${{ matrix.target }}/release/${{ matrix.bin }}" "./${{ matrix.name }}"
+          elif [ -f "target/release/${{ matrix.bin }}" ]; then
+            cp "target/release/${{ matrix.bin }}" "./${{ matrix.name }}"
+          else
+            echo "Binary not found!"
+            exit 1
+          fi
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2.6.1
+        with:
+          files: ./${{ matrix.name }}
+          tag_name: ${{ needs.find-draft.outputs.tag_name }}
+          draft: true 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
