@@ -1,6 +1,6 @@
 [package]
 name = "qack"
-version = "0.0.1"
+version = "0.1.0"
 edition = "2021"
 authors = ["Forbirdden"]
 description = "This is a Qa lang compiler"
@@ -9,6 +9,14 @@ license = "MIT OR Apache-2.0"
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }
 colored = "3.1.1"
+include_dir = "0.7"
+dirs = "6.0"
+
+[build-dependencies]
+reqwest = { version = "0.13.2", features = ["blocking"] }
+xz2 = "0.1"
+tar = "0.4"
+zip = "8.4.0"
 
 [profile.release]
 opt-level = "z"
