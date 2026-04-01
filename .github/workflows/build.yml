@@ -29,61 +29,63 @@ jobs:
       matrix:
         include:
           # GNU LINUX
-          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, bin: qack, name: qack-linux-amd64-gnu }
-          - { os: ubuntu-latest, target: i686-unknown-linux-gnu, bin: qack, name: qack-linux-i686-gnu }
-          - { os: ubuntu-latest, target: aarch64-unknown-linux-gnu, bin: qack, name: qack-linux-arm64-gnu }
-          - { os: ubuntu-latest, target: arm-unknown-linux-gnueabi, bin: qack, name: qack-linux-arm32-gnu }
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, bin: qack, name: qack-linux-amd64-gnu-zig }
+          - { os: ubuntu-latest, target: i686-unknown-linux-gnu, bin: qack, name: qack-linux-i686-gnu-zig }
+          - { os: ubuntu-latest, target: aarch64-unknown-linux-gnu, bin: qack, name: qack-linux-arm64-gnu-zig }
+          - { os: ubuntu-latest, target: arm-unknown-linux-gnueabi, bin: qack, name: qack-linux-arm32-gnu-zig }
           - { os: ubuntu-latest, target: mips-unknown-linux-gnu, bin: qack, name: qack-linux-mips32-gnu }
           - { os: ubuntu-latest, target: mipsel-unknown-linux-gnu, bin: qack, name: qack-linux-mips32el-gnu }
           - { os: ubuntu-latest, target: mips64-unknown-linux-gnuabi64, bin: qack, name: qack-linux-mips64-gnu }
           - { os: ubuntu-latest, target: mips64el-unknown-linux-gnuabi64, bin: qack, name: qack-linux-mips64el-gnu }
-          - { os: ubuntu-latest, target: riscv64gc-unknown-linux-gnu, bin: qack, name: qack-linux-riscv64-gnu }
-          - { os: ubuntu-latest, target: s390x-unknown-linux-gnu, bin: qack, name: qack-linux-s390x-gnu }
+          - { os: ubuntu-latest, target: riscv64gc-unknown-linux-gnu, bin: qack, name: qack-linux-riscv64-gnu-zig }
+          - { os: ubuntu-latest, target: s390x-unknown-linux-gnu, bin: qack, name: qack-linux-s390x-gnu-zig }
           - { os: ubuntu-latest, target: powerpc64-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc64-gnu } 
-          - { os: ubuntu-latest, target: powerpc64le-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc64le-gnu } 
-          - { os: ubuntu-latest, target: loongarch64-unknown-linux-gnu, bin: qack, name: qack-linux-loongarch64-gnu } 
+          - { os: ubuntu-latest, target: powerpc64le-unknown-linux-gnu, bin: qack, name: qack-linux-powerpc64le-gnu-zig } 
+          - { os: ubuntu-latest, target: loongarch64-unknown-linux-gnu, bin: qack, name: qack-linux-loongarch64-gnu-zig } 
           # MUSL LINUX
-          - { os: ubuntu-latest, target: x86_64-unknown-linux-musl, bin: qack, name: qack-linux-amd64-musl }
-          - { os: ubuntu-latest, target: i686-unknown-linux-musl, bin: qack, name: qack-linux-i686-musl }
-          - { os: ubuntu-latest, target: aarch64-unknown-linux-musl, bin: qack, name: qack-linux-arm64-musl }
-          - { os: ubuntu-latest, target: arm-unknown-linux-musleabi, bin: qack, name: qack-linux-arm32-musl }
+          - { os: ubuntu-latest, target: x86_64-unknown-linux-musl, bin: qack, name: qack-linux-amd64-musl-zig }
+          - { os: ubuntu-latest, target: i686-unknown-linux-musl, bin: qack, name: qack-linux-i686-musl-zig }
+          - { os: ubuntu-latest, target: aarch64-unknown-linux-musl, bin: qack, name: qack-linux-arm64-musl-zig }
+          - { os: ubuntu-latest, target: arm-unknown-linux-musleabi, bin: qack, name: qack-linux-arm32-musl-zig }
           - { os: ubuntu-latest, target: mips-unknown-linux-musl, bin: qack, name: qack-linux-mips32-musl }
           - { os: ubuntu-latest, target: mipsel-unknown-linux-musl, bin: qack, name: qack-linux-mips32el-musl }
           - { os: ubuntu-latest, target: mips64-unknown-linux-muslabi64, bin: qack, name: qack-linux-mips64-musl }
           - { os: ubuntu-latest, target: mips64el-unknown-linux-muslabi64, bin: qack, name: qack-linux-mips64el-musl }
-          - { os: ubuntu-latest, target: riscv64gc-unknown-linux-musl, bin: qack, name: qack-linux-riscv64-musl }
-          - { os: ubuntu-latest, target: s390x-unknown-linux-musl, bin: qack, name: qack-linux-s390x-musl }
+          - { os: ubuntu-latest, target: riscv64gc-unknown-linux-musl, bin: qack, name: qack-linux-riscv64-musl-zig }
+          - { os: ubuntu-latest, target: s390x-unknown-linux-musl, bin: qack, name: qack-linux-s390x-musl-zig }
           - { os: ubuntu-latest, target: powerpc64-unknown-linux-musl, bin: qack, name: qack-linux-powerpc64-musl } 
-          - { os: ubuntu-latest, target: loongarch64-unknown-linux-musl, bin: qack, name: qack-linux-loongarch64-musl }  
+          - { os: ubuntu-latest, target: loongarch64-unknown-linux-musl, bin: qack, name: qack-linux-loongarch64-musl-zig }  
           # FREE BSD
-          - { os: ubuntu-latest, target: x86_64-unknown-freebsd, bin: qack, name: qack-freebsd-amd64 }
-          - { os: ubuntu-latest, target: aarch64-unknown-freebsd , bin: qack, name: qack-freebsd-arm64 } 
-          - { os: ubuntu-latest, target: i686-unknown-freebsd, bin: qack, name: qack-freebsd-i686 }  
-          - { os: ubuntu-latest, target: powerpc64le-unknown-freebsd , bin: qack, name: qack-freebsd-powerpc64le } 
-          - { os: ubuntu-latest, target: powerpc64-unknown-freebsd , bin: qack, name: qack-freebsd-powerpc64 } 
-          - { os: ubuntu-latest, target: riscv64-unknown-freebsd, bin: qack, name: qack-freebsd-riscv64 } 
+          - { os: ubuntu-latest, target: x86_64-unknown-freebsd, bin: qack, name: qack-freebsd-amd64-zig }
+          - { os: ubuntu-latest, target: aarch64-unknown-freebsd , bin: qack, name: qack-freebsd-arm64-zig } 
+          - { os: ubuntu-latest, target: i686-unknown-freebsd, bin: qack, name: qack-freebsd-i686-zig }  
+          - { os: ubuntu-latest, target: powerpc64le-unknown-freebsd , bin: qack, name: qack-freebsd-powerpc64le-zig } 
+          - { os: ubuntu-latest, target: powerpc64-unknown-freebsd , bin: qack, name: qack-freebsd-powerpc64-zig } 
+          - { os: ubuntu-latest, target: riscv64-unknown-freebsd, bin: qack, name: qack-freebsd-riscv64-zig } 
           # OPEN BSD
           - { os: ubuntu-latest, target: x86_64-unknown-openbsd, bin: qack, name: qack-openbsd-amd64 }
           - { os: ubuntu-latest, target: aarch64-unknown-openbsd , bin: qack, name: qack-openbsd-arm64 } 
           - { os: ubuntu-latest, target: arm-unknown-openbsd, bin: qack, name: qack-openbsd-arm32 }  
           - { os: ubuntu-latest, target: riscv64-unknown-openbsd, bin: qack, name: qack-openbsd-riscv64 }  
           # NET BSD
-          - { os: ubuntu-latest, target: x86_64-unknown-netbsd, bin: qack, name: qack-netbsd-amd64 }
-          - { os: ubuntu-latest, target: aarch64-unknown-netbsd , bin: qack, name: qack-netbsd-arm64 } 
-          - { os: ubuntu-latest, target: i686-unknown-netbsd, bin: qack, name: qack-netbsd-i686 } 
-          - { os: ubuntu-latest, target: arm-unknown-netbsd, bin: qack, name: qack-netbsd-arm32 }    
+          - { os: ubuntu-latest, target: x86_64-unknown-netbsd, bin: qack, name: qack-netbsd-amd64-zig }
+          - { os: ubuntu-latest, target: aarch64-unknown-netbsd , bin: qack, name: qack-netbsd-arm64-zig } 
+          - { os: ubuntu-latest, target: i686-unknown-netbsd, bin: qack, name: qack-netbsd-i686-zig } 
+          - { os: ubuntu-latest, target: arm-unknown-netbsd, bin: qack, name: qack-netbsd-arm32-zig }    
           # ANDROID
           - { os: ubuntu-latest, target: aarch64-linux-android, bin: qack, name: qack-android-arm64 }
           - { os: ubuntu-latest, target: arm-linux-androideabi, bin: qack, name: qack-android-arm32 }
           - { os: ubuntu-latest, target: x86_64-linux-android, bin: qack, name: qack-android-amd64 }
           - { os: ubuntu-latest, target: i686-linux-android, bin: qack, name: qack-android-i686 }
           # WINDOWS
-          - { os: windows-latest, target: x86_64-pc-windows-gnu, bin: qack.exe, name: qack-windows-amd64.exe }
-          - { os: windows-latest, target: i686-pc-windows-gnu, bin: qack.exe, name: qack-windows-i686.exe }
-          - { os: windows-latest, target: aarch64-pc-windows-gnu, bin: qack.exe, name: qack-windows-arm64.exe }
+          - { os: windows-latest, target: x86_64-pc-windows-gnu, bin: qack.exe, name: qack-windows-gnu-amd64-zig.exe }
+          - { os: windows-latest, target: i686-pc-windows-gnu, bin: qack.exe, name: qack-windows-gnu-i686-zig.exe }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc, bin: qack.exe, name: qack-windows-msvc-amd64-zig.exe }
+          - { os: windows-latest, target: i686-pc-windows-msvc, bin: qack.exe, name: qack-windows-msvc-i686-zig.exe }
+          - { os: windows-latest, target: aarch64-pc-windows-msvc, bin: qack.exe, name: qack-windows-msvc-arm64-zig.exe }
           # MAC OS
-          - { os: macos-latest, target: x86_64-apple-darwin, bin: qack, name: qack-macos-amd64 }
-          - { os: macos-latest, target: aarch64-apple-darwin, bin: qack, name: qack-macos-arm64 }
+          - { os: macos-latest, target: x86_64-apple-darwin, bin: qack, name: qack-macos-amd64-zig }
+          - { os: macos-latest, target: aarch64-apple-darwin, bin: qack, name: qack-macos-arm64-zig }
 
     steps:
       - uses: actions/checkout@v6
@@ -91,23 +93,27 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc')) && 'nightly' || 'stable' }}
-          targets: ${{ !((contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc'))) && matrix.target || '' }}
-          components: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc')) && 'rust-src' || '' }}
+          toolchain: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc') || contains(matrix.target, 'bsd')) && 'nightly' || 'stable' }}
+          targets: ${{ !((contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc') || contains(matrix.target, 'bsd'))) && matrix.target || '' }}
+          components: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc') || contains(matrix.target, 'bsd')) && 'rust-src' || '' }}
+
+       - name: Install i686-pc-windows-gnu
+         if: ${{ (contains(matrix.target, 'i686-pc-windows-gnu')) }}
+         run: choco install mingw --x86 --allow-empty-checksums
 
       - name: Install CrossRS
         if: runner.os == 'Linux'
         run: cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Install zigbuild
-        if: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'bsd')) && 'rust-src' || '' }}
+        if: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'bsd')) }}
         run: pip install cargo-zigbuild
 
       - name: Build
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
-            if [[ "${{ matrix.target }}" =~ (powerpc|s390x-unknown-linux-musl|bsd) ]]; then
+            if [[ "${{ matrix.target }}" =~ (powerpc|s390x-unknown-linux-musl|bsd|arm-linux-gnueabi) ]]; then
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
             elif [[ "${{ matrix.target }}" =~ (mips) ]]; then
               cross build --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
