@@ -97,9 +97,9 @@ jobs:
           targets: ${{ !((contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc') || contains(matrix.target, 'bsd'))) && matrix.target || '' }}
           components: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'mips') || contains(matrix.target, 'loongarch') || contains(matrix.target, 'riscv32gc') || contains(matrix.target, 'bsd')) && 'rust-src' || '' }}
 
-       - name: Install i686-pc-windows-gnu
-         if: ${{ (contains(matrix.target, 'i686-pc-windows-gnu')) }}
-         run: choco install mingw --x86 --allow-empty-checksums
+      - name: Install i686-pc-windows-gnu
+        if: ${{ (contains(matrix.target, 'i686-pc-windows-gnu')) }}
+        run: choco install mingw --x86 --allow-empty-checksums
 
       - name: Install CrossRS
         if: runner.os == 'Linux'
