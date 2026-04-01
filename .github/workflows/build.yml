@@ -106,7 +106,7 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Install zigbuild
-        if: ${{ (contains(matrix.target, 'arm-unknown-linux-gnueabi') || (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'bsd')) }}
+        if: ${{ contains(matrix.target, 'arm-unknown-linux-gnueabi') || contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'freebsd') }}
         run: pip install cargo-zigbuild
 
       - name: Build
