@@ -25,3 +25,5 @@ Qack - a fast, modern and feature-full compiler powered by Rust handles the comp
  - Cross-Compatibility: Write code once for all platforms - qack automatically maps system calls like sleep or clear for all common OSes.
 
 [See some examples](examples)
+
+<sub>*Qack embeds the Zig compiler, which is licensed under the MIT License. Copyright (c) Zig Software Foundation.*</sub>
