@@ -60,18 +60,7 @@ jobs:
           - { os: ubuntu-latest, target: aarch64-unknown-freebsd , bin: qack, name: qack-freebsd-arm64-zig } 
           - { os: ubuntu-latest, target: i686-unknown-freebsd, bin: qack, name: qack-freebsd-i686-zig }  
           - { os: ubuntu-latest, target: powerpc64le-unknown-freebsd , bin: qack, name: qack-freebsd-powerpc64le-zig } 
-          - { os: ubuntu-latest, target: powerpc64-unknown-freebsd , bin: qack, name: qack-freebsd-powerpc64-zig } 
-          - { os: ubuntu-latest, target: riscv64gc-unknown-freebsd, bin: qack, name: qack-freebsd-riscv64-zig } 
-          # OPEN BSD
-          - { os: ubuntu-latest, target: x86_64-unknown-openbsd, bin: qack, name: qack-openbsd-amd64 }
-          - { os: ubuntu-latest, target: aarch64-unknown-openbsd , bin: qack, name: qack-openbsd-arm64 } 
-          - { os: ubuntu-latest, target: arm-unknown-openbsd, bin: qack, name: qack-openbsd-arm32 }  
-          - { os: ubuntu-latest, target: riscv64gc-unknown-openbsd, bin: qack, name: qack-openbsd-riscv64 }  
-          # NET BSD
-          - { os: ubuntu-latest, target: x86_64-unknown-netbsd, bin: qack, name: qack-netbsd-amd64-zig }
-          - { os: ubuntu-latest, target: aarch64-unknown-netbsd , bin: qack, name: qack-netbsd-arm64-zig } 
-          - { os: ubuntu-latest, target: i686-unknown-netbsd, bin: qack, name: qack-netbsd-i686-zig } 
-          - { os: ubuntu-latest, target: arm-unknown-netbsd, bin: qack, name: qack-netbsd-arm32-zig }    
+          - { os: ubuntu-latest, target: powerpc64-unknown-freebsd , bin: qack, name: qack-freebsd-powerpc64-zig }  
           # ANDROID
           - { os: ubuntu-latest, target: aarch64-linux-android, bin: qack, name: qack-android-arm64 }
           - { os: ubuntu-latest, target: arm-linux-androideabi, bin: qack, name: qack-android-arm32 }
@@ -100,6 +89,8 @@ jobs:
       - name: Install i686-pc-windows-gnu
         if: ${{ (contains(matrix.target, 'i686-pc-windows-gnu')) }}
         run: choco install mingw --x86 --allow-empty-checksums
+             echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw32\bin" >> $GITHUB_PATH
+        shell: bash
 
       - name: Install CrossRS
         if: runner.os == 'Linux'
@@ -117,8 +108,6 @@ jobs:
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
             elif [[ "${{ matrix.target }}" =~ (arm-unknown-linux-gnueabi) ]]; then
               cargo zigbuild --release --target ${{ matrix.target }}
-            elif [[ "${{ matrix.target }}" =~ (openbsd|netbsd) ]]; then
-              cargo build --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
             elif [[ "${{ matrix.target }}" =~ (mips) ]]; then
               cross build --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
             else
