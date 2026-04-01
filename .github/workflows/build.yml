@@ -61,12 +61,12 @@ jobs:
           - { os: ubuntu-latest, target: i686-unknown-freebsd, bin: qack, name: qack-freebsd-i686-zig }  
           - { os: ubuntu-latest, target: powerpc64le-unknown-freebsd , bin: qack, name: qack-freebsd-powerpc64le-zig } 
           - { os: ubuntu-latest, target: powerpc64-unknown-freebsd , bin: qack, name: qack-freebsd-powerpc64-zig } 
-          - { os: ubuntu-latest, target: riscv64-unknown-freebsd, bin: qack, name: qack-freebsd-riscv64-zig } 
+          - { os: ubuntu-latest, target: riscv64gc-unknown-freebsd, bin: qack, name: qack-freebsd-riscv64-zig } 
           # OPEN BSD
           - { os: ubuntu-latest, target: x86_64-unknown-openbsd, bin: qack, name: qack-openbsd-amd64 }
           - { os: ubuntu-latest, target: aarch64-unknown-openbsd , bin: qack, name: qack-openbsd-arm64 } 
           - { os: ubuntu-latest, target: arm-unknown-openbsd, bin: qack, name: qack-openbsd-arm32 }  
-          - { os: ubuntu-latest, target: riscv64-unknown-openbsd, bin: qack, name: qack-openbsd-riscv64 }  
+          - { os: ubuntu-latest, target: riscv64gc-unknown-openbsd, bin: qack, name: qack-openbsd-riscv64 }  
           # NET BSD
           - { os: ubuntu-latest, target: x86_64-unknown-netbsd, bin: qack, name: qack-netbsd-amd64-zig }
           - { os: ubuntu-latest, target: aarch64-unknown-netbsd , bin: qack, name: qack-netbsd-arm64-zig } 
@@ -106,15 +106,19 @@ jobs:
         run: cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Install zigbuild
-        if: ${{ (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'bsd')) }}
+        if: ${{ (contains(matrix.target, 'arm-unknown-linux-gnueabi') || (contains(matrix.target, 'powerpc') || contains(matrix.target, 's390x-unknown-linux-musl') || contains(matrix.target, 'bsd')) }}
         run: pip install cargo-zigbuild
 
       - name: Build
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Linux" ]; then
-            if [[ "${{ matrix.target }}" =~ (powerpc|s390x-unknown-linux-musl|bsd|arm-linux-gnueabi) ]]; then
+            if [[ "${{ matrix.target }}" =~ (powerpc|s390x-unknown-linux-musl|freebsd) ]]; then
               cargo zigbuild --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
+            elif [[ "${{ matrix.target }}" =~ (arm-unknown-linux-gnueabi) ]]; then
+              cargo zigbuild --release --target ${{ matrix.target }}
+            elif [[ "${{ matrix.target }}" =~ (openbsd|netbsd) ]]; then
+              cargo build --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
             elif [[ "${{ matrix.target }}" =~ (mips) ]]; then
               cross build --release --target ${{ matrix.target }} -Z build-std=std,core,alloc,panic_abort
             else
